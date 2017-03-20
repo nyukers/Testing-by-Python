@@ -2,8 +2,10 @@
 
 #import time, unittest
 import pytest
-from group import Group
-from application import Application
+
+from fixture.application import Application
+from model.group import Group
+
 
 @pytest.fixture
 def app(request):
@@ -11,9 +13,9 @@ def app(request):
     request.addfinalizer(fixture.destroy)
     return fixture
 
-def test_add_group(self):
-     app.login(username="admin", password="secret")
-     app.create_group(Group(name="My group", header="My group", footer="footer"))
-     app.logout()
-     #self.assertTrue(success)
+def test_add_group(app):
+    app.session.login(username="admin", password="secret")
+    app.group.create(Group(name="My group", header="My group", footer="footer"))
+    app.session.logout()
+    #self.assertTrue(success)
 
