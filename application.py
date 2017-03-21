@@ -12,7 +12,7 @@ from fixture.group import GroupHelper
 #binary = FirefoxBinary('C:/Users/9a4459/AppData/Local/Mozilla Firefox/')
 #browser = webdriver.Firefox(firefox_binary=binary)
 
-from selenium.webdriver.common.action_chains import ActionChains
+#from selenium.webdriver.common.action_chains import ActionChains
 
 class Application:
     def __init__(self):
@@ -20,6 +20,14 @@ class Application:
         self.wd.implicitly_wait(60)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
+
+# check running browser
+    def is_valid(self):
+        try:
+            self.wd.current_url
+            return True
+        except:
+            return False
 
     def return_to_page(self):
         wd = self.wd

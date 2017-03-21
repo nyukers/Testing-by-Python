@@ -1,21 +1,10 @@
 # -*- coding: utf-8 -*-
-
-#import time, unittest
-import pytest
-
-from fixture.application import Application
 from model.group import Group
 
-
-@pytest.fixture
-def app(request):
-    fixture = Application()
-    request.addfinalizer(fixture.destroy)
-    return fixture
+def test_add_group(app):
+    app.group.create(Group(name="My group", header="header", footer="footer"))
+    #self.assertTrue(success)
 
 def test_add_group(app):
-    app.session.login(username="admin", password="secret")
-    app.group.create(Group(name="My group", header="My group", footer="footer"))
-    app.session.logout()
-    #self.assertTrue(success)
+    app.group.create(Group(name="", header="", footer=""))
 
