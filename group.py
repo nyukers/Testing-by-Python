@@ -1,94 +1,39 @@
 from model.group import Group
+import random
+import string
+import os.path
+import json
+import getopt, sys
 
-class GroupHelper:
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "n:f:", ["number of groups", "file"])
+except getopt.GetoptError as err:
+    getopt.usage()
+    sys.exit(2)
 
-    def __init__(self, app):
-        self.app = app
+n = 5
+f = "data/groups.json"
 
+for o, a in opts:
+    if o == "-n":
+        n = int(a)
+    elif o == "-f":
+        f = a
 
-    def create(self, group):
-        wd = self.app.wd
-        self.open_group_page()
-        # init group creation
-        wd.find_element_by_name("new").click()
-        self.fill_group_form(group)
-        # submit group creation
-        wd.find_element_by_name("submit").click()
-        self.app.return_to_page()
-        self.group_cache = None
+#generator of random data for Group
+def random_string(prefix, maxlen):
+    symbols = string.ascii_letters + string.digits + string.punctuation + " "*10
+    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
-    def fill_group_form(self, group):
-        wd = self.app.wd
-        # fill group firm
-        self.change_field_value("group_name", group.name)
-        self.change_field_value("group_header", group.header)
-        self.change_field_value("group_footer", group.footer)
-
-    def change_field_value(self, field_name, text):
-        wd = self.app.wd
-        if text is not None:
-            wd.find_element_by_name(field_name).click()
-            wd.find_element_by_name(field_name).clear()
-            wd.find_element_by_name(field_name).send_keys(text)
-
-    def select_first_group(self):
-        wd = self.app.wd
-        # select first group
-        wd.find_element_by_name("selected[]").click()
-
-    def select_group_by_index(self, index):
-        wd = self.app.wd
-        wd.find_elements_by_name("selected[]")[index].click()
-
-    def delete_first_group(self):
-        self.delete_group_by_index(0)
-
-    def delete_group_by_index(self, index):
-        wd = self.app.wd
-        self.open_group_page()
-        self.select_group_by_index(index)
-        # submit deletion fisrt group
-        wd.find_element_by_name("delete").click()
-        self.app.return_to_page()
-        self.group_cache = None
-
-    def modify_first_group(self):
-        self.modify_group_by_index(0)
-
-    def modify_group_by_index(self, index, new_group_data):
-        wd = self.app.wd
-        self.open_group_page()
-        self.select_group_by_index(index)
-        #open modification form
-        wd.find_element_by_name("edit").click()
-        #fill modification form
-        self.fill_group_form(new_group_data)
-        #submit modification form
-        wd.find_element_by_name("update").click()
-        self.app.return_to_page()
-        self.group_cache = None
-
-    def open_group_page(self):
-        wd = self.app.wd
-        if not (wd.current_url.endswith("/group.php") and (len(wd.find_elements_by_name("new")) > 0)):
-            wd.find_element_by_link_text("groups").click()
-
-    def count(self):
-        wd = self.app.wd
-        self.open_group_page()
-        return len(wd.find_element_by_name("selected[]"))
-
-    group_cache = None
-
-    def get_group_list(self):
-        if self.group.cache is None:
-            wd = self.app.wd
-            self.open_group_page()
-            self.group_cache = []
-            for element in wd.find_element_by_css_selector("span.group"):
-                text = element.text
-                id = element.find_element_by_name("selected[]").get_attribute("value")
-                self.group_cache.append(Group(name = text, id = id))
-        return list(self.group_cache)
+#first blank group and 5 random groups
+#Test Data Driven
+testdata = [Group(name="", header="", footer="")] +[
+        Group(name=random_string("name", 10), header=random_string("header", 20), footer=random_string("footer", 20))
+        for i in range(n)
+    ]
 
 
+file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", f)
+
+with open(file, "w") as out:
+    out.write(json.dumps(testdata, default=lambda x: x.__dict__, indent=2))
