@@ -1,2 +1,2 @@
 # python_training
-TestCase by Python
+Some Test Cases by Python
