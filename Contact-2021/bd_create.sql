@@ -1,0 +1,1 @@
+CREATE DATABASE contactdb OWNER postgres;
