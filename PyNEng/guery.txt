@@ -1,0 +1,12 @@
+sqlite3 dhcp_snooping.db "SELECT name FROM sqlite_master WHERE type='table'"
+
+sqlite3 dhcp_snooping.db "select * from dhcp"
+
+sqlite3 dhcp_snooping.db "select * from dhcp where ip = '10.1.5.2'"
+
+python get_data_ver1.py ip 10.1.10.2
+
+python get_data_ver1.py vlan 10
+
+python get_data_ver2.py vlan 10
+
