@@ -1,0 +1,35 @@
+1. Создание виртуального окружения:
+python -m venv .venv
+
+2. Установка необходимых пакетов:
+pip3 install -r requirements.txt
+
+3. Создание django-проекта webcontact:
+django-admin createproject webcontact
+
+4. Создание приложения contacts:
+python manage.py startapp contacts
+
+5. Создание модели миграции БД
+python manage.py makemigrations
+
+6. Миграция БД
+python manage.py migrate
+
+7. Создание django администратора:
+python manage.py createsuperuser
+
+###################################
+cd .venv
+cd Scripts
+:Запуск  виртуального окружения
+activate
+cd ../..
+:Запуск django
+python manage.py runserver
+
+
+
+
+
+
